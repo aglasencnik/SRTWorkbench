@@ -35,6 +35,17 @@
             tabPageShifter = new TabPage();
             tabPagePartialShifter = new TabPage();
             tabPageEditor = new TabPage();
+            lblEditorOrText = new Label();
+            lblEditorCtrlSText = new Label();
+            btnEditorNext = new Button();
+            btnEditorPrevious = new Button();
+            btnEditorFind = new Button();
+            numericUpDownEditorId = new NumericUpDown();
+            lblEditorSearchText = new Label();
+            btnEditorSaveFile = new Button();
+            btnEditorOpenFile = new Button();
+            lblEditorTitle = new Label();
+            rtbxEditor = new RichTextBox();
             tabPageApiSettings = new TabPage();
             btnApiSettingsShowPassword = new Button();
             btnApiSettingsSaveChanges = new Button();
@@ -51,6 +62,8 @@
             pbxAboutLogo = new PictureBox();
             lblAboutTitle = new Label();
             tabControl.SuspendLayout();
+            tabPageEditor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownEditorId).BeginInit();
             tabPageApiSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbxApiSettingsImage).BeginInit();
             tabPageAbout.SuspendLayout();
@@ -119,12 +132,149 @@
             // tabPageEditor
             // 
             tabPageEditor.BackColor = Color.Gainsboro;
-            tabPageEditor.Location = new Point(4, 24);
+            tabPageEditor.Controls.Add(lblEditorOrText);
+            tabPageEditor.Controls.Add(lblEditorCtrlSText);
+            tabPageEditor.Controls.Add(btnEditorNext);
+            tabPageEditor.Controls.Add(btnEditorPrevious);
+            tabPageEditor.Controls.Add(btnEditorFind);
+            tabPageEditor.Controls.Add(numericUpDownEditorId);
+            tabPageEditor.Controls.Add(lblEditorSearchText);
+            tabPageEditor.Controls.Add(btnEditorSaveFile);
+            tabPageEditor.Controls.Add(btnEditorOpenFile);
+            tabPageEditor.Controls.Add(lblEditorTitle);
+            tabPageEditor.Controls.Add(rtbxEditor);
+            tabPageEditor.Location = new Point(4, 30);
             tabPageEditor.Margin = new Padding(3, 4, 3, 4);
             tabPageEditor.Name = "tabPageEditor";
-            tabPageEditor.Size = new Size(754, 512);
+            tabPageEditor.Size = new Size(754, 506);
             tabPageEditor.TabIndex = 4;
             tabPageEditor.Text = "Editor";
+            // 
+            // lblEditorOrText
+            // 
+            lblEditorOrText.AutoSize = true;
+            lblEditorOrText.BackColor = Color.Transparent;
+            lblEditorOrText.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblEditorOrText.Location = new Point(659, 443);
+            lblEditorOrText.Name = "lblEditorOrText";
+            lblEditorOrText.Size = new Size(42, 30);
+            lblEditorOrText.TabIndex = 14;
+            lblEditorOrText.Text = "OR";
+            // 
+            // lblEditorCtrlSText
+            // 
+            lblEditorCtrlSText.AutoSize = true;
+            lblEditorCtrlSText.BackColor = Color.Transparent;
+            lblEditorCtrlSText.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblEditorCtrlSText.Location = new Point(644, 473);
+            lblEditorCtrlSText.Name = "lblEditorCtrlSText";
+            lblEditorCtrlSText.Size = new Size(73, 30);
+            lblEditorCtrlSText.TabIndex = 13;
+            lblEditorCtrlSText.Text = "Ctrl+S";
+            // 
+            // btnEditorNext
+            // 
+            btnEditorNext.BackColor = Color.Silver;
+            btnEditorNext.Cursor = Cursors.Hand;
+            btnEditorNext.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnEditorNext.Location = new Point(682, 287);
+            btnEditorNext.Name = "btnEditorNext";
+            btnEditorNext.Size = new Size(61, 51);
+            btnEditorNext.TabIndex = 12;
+            btnEditorNext.Text = ">";
+            btnEditorNext.UseVisualStyleBackColor = false;
+            btnEditorNext.Click += btnEditorNext_Click;
+            // 
+            // btnEditorPrevious
+            // 
+            btnEditorPrevious.BackColor = Color.Silver;
+            btnEditorPrevious.Cursor = Cursors.Hand;
+            btnEditorPrevious.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnEditorPrevious.Location = new Point(621, 287);
+            btnEditorPrevious.Name = "btnEditorPrevious";
+            btnEditorPrevious.Size = new Size(61, 51);
+            btnEditorPrevious.TabIndex = 11;
+            btnEditorPrevious.Text = "<";
+            btnEditorPrevious.UseVisualStyleBackColor = false;
+            btnEditorPrevious.Click += btnEditorPrevious_Click;
+            // 
+            // btnEditorFind
+            // 
+            btnEditorFind.BackColor = Color.Silver;
+            btnEditorFind.Cursor = Cursors.Hand;
+            btnEditorFind.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnEditorFind.Location = new Point(621, 230);
+            btnEditorFind.Name = "btnEditorFind";
+            btnEditorFind.Size = new Size(122, 51);
+            btnEditorFind.TabIndex = 10;
+            btnEditorFind.Text = "Find";
+            btnEditorFind.UseVisualStyleBackColor = false;
+            btnEditorFind.Click += btnEditorFind_Click;
+            // 
+            // numericUpDownEditorId
+            // 
+            numericUpDownEditorId.Location = new Point(621, 185);
+            numericUpDownEditorId.Maximum = new decimal(new int[] { 999999, 0, 0, 0 });
+            numericUpDownEditorId.Name = "numericUpDownEditorId";
+            numericUpDownEditorId.Size = new Size(120, 29);
+            numericUpDownEditorId.TabIndex = 9;
+            // 
+            // lblEditorSearchText
+            // 
+            lblEditorSearchText.AutoSize = true;
+            lblEditorSearchText.BackColor = Color.Transparent;
+            lblEditorSearchText.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblEditorSearchText.Location = new Point(615, 152);
+            lblEditorSearchText.Name = "lblEditorSearchText";
+            lblEditorSearchText.Size = new Size(136, 30);
+            lblEditorSearchText.TabIndex = 8;
+            lblEditorSearchText.Text = "Search by Id:";
+            // 
+            // btnEditorSaveFile
+            // 
+            btnEditorSaveFile.BackColor = Color.Silver;
+            btnEditorSaveFile.Cursor = Cursors.Hand;
+            btnEditorSaveFile.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnEditorSaveFile.Location = new Point(621, 389);
+            btnEditorSaveFile.Name = "btnEditorSaveFile";
+            btnEditorSaveFile.Size = new Size(122, 51);
+            btnEditorSaveFile.TabIndex = 7;
+            btnEditorSaveFile.Text = "Save File";
+            btnEditorSaveFile.UseVisualStyleBackColor = false;
+            btnEditorSaveFile.Click += btnEditorSaveFile_Click;
+            // 
+            // btnEditorOpenFile
+            // 
+            btnEditorOpenFile.BackColor = Color.Silver;
+            btnEditorOpenFile.Cursor = Cursors.Hand;
+            btnEditorOpenFile.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnEditorOpenFile.Location = new Point(621, 53);
+            btnEditorOpenFile.Name = "btnEditorOpenFile";
+            btnEditorOpenFile.Size = new Size(122, 51);
+            btnEditorOpenFile.TabIndex = 6;
+            btnEditorOpenFile.Text = "Open File";
+            btnEditorOpenFile.UseVisualStyleBackColor = false;
+            btnEditorOpenFile.Click += btnEditorOpenFile_Click;
+            // 
+            // lblEditorTitle
+            // 
+            lblEditorTitle.AutoSize = true;
+            lblEditorTitle.BackColor = Color.Transparent;
+            lblEditorTitle.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblEditorTitle.Location = new Point(316, 0);
+            lblEditorTitle.Name = "lblEditorTitle";
+            lblEditorTitle.Size = new Size(128, 50);
+            lblEditorTitle.TabIndex = 2;
+            lblEditorTitle.Text = "Editor";
+            // 
+            // rtbxEditor
+            // 
+            rtbxEditor.Location = new Point(3, 53);
+            rtbxEditor.Name = "rtbxEditor";
+            rtbxEditor.Size = new Size(612, 450);
+            rtbxEditor.TabIndex = 0;
+            rtbxEditor.Text = "";
+            rtbxEditor.KeyDown += rtbxEditor_KeyDown;
             // 
             // tabPageApiSettings
             // 
@@ -135,10 +285,10 @@
             tabPageApiSettings.Controls.Add(lblApiSettingsApiKey);
             tabPageApiSettings.Controls.Add(pbxApiSettingsImage);
             tabPageApiSettings.Controls.Add(lblApiSettingsTitle);
-            tabPageApiSettings.Location = new Point(4, 30);
+            tabPageApiSettings.Location = new Point(4, 24);
             tabPageApiSettings.Margin = new Padding(3, 4, 3, 4);
             tabPageApiSettings.Name = "tabPageApiSettings";
-            tabPageApiSettings.Size = new Size(754, 506);
+            tabPageApiSettings.Size = new Size(754, 512);
             tabPageApiSettings.TabIndex = 5;
             tabPageApiSettings.Text = "API Settings";
             // 
@@ -316,6 +466,9 @@
             Text = "SRT Workbench";
             Load += MainForm_Load;
             tabControl.ResumeLayout(false);
+            tabPageEditor.ResumeLayout(false);
+            tabPageEditor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownEditorId).EndInit();
             tabPageApiSettings.ResumeLayout(false);
             tabPageApiSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pbxApiSettingsImage).EndInit();
@@ -348,5 +501,16 @@
         private TextBox tbxApiSettingsApiKey;
         private Label lblApiSettingsApiKey;
         private Button btnApiSettingsShowPassword;
+        private RichTextBox rtbxEditor;
+        private Button btnEditorOpenFile;
+        private Label lblEditorTitle;
+        private Button btnEditorSaveFile;
+        private Button btnEditorNext;
+        private Button btnEditorPrevious;
+        private Button btnEditorFind;
+        private NumericUpDown numericUpDownEditorId;
+        private Label lblEditorSearchText;
+        private Label lblEditorOrText;
+        private Label lblEditorCtrlSText;
     }
 }
