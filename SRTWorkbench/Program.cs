@@ -5,7 +5,14 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        ApplicationConfiguration.Initialize();
-        Application.Run(new MainForm());
+        try
+        {
+            ApplicationConfiguration.Initialize();
+            Application.Run(new MainForm());
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
     }
 }
