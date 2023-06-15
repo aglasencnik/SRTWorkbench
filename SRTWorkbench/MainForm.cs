@@ -1,5 +1,6 @@
 using CredentialManagement;
 using SRTWorkbench.Helpers;
+using SRTWorkbench.Models;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
@@ -10,7 +11,7 @@ public partial class MainForm : Form
 {
     private readonly string _credentialTarget = "SRTWorkbenchAPI";
     private string _apiKey;
-    private string _editorFilePath;
+    private string _filePath;
     private List<int> _editorFoundIndexes;
     private int _editorCurrentOccurrenceIndex;
 
@@ -21,7 +22,7 @@ public partial class MainForm : Form
             InitializeComponent();
 
             _apiKey = string.Empty;
-            _editorFilePath = string.Empty;
+            _filePath = string.Empty;
             _editorFoundIndexes = new List<int>();
             _editorCurrentOccurrenceIndex = -1;
         }
@@ -72,7 +73,9 @@ public partial class MainForm : Form
             }
             else if (currentPage == tabPageShifter)
             {
-
+                btnShifter.Enabled = false;
+                numericUpDownShifter.Value = 0;
+                numericUpDownShifter.Enabled = false;
             }
             else if (currentPage == tabPagePartialShifter)
             {
@@ -117,6 +120,49 @@ public partial class MainForm : Form
     #endregion
 
     #region Shifting
+    private void btnShifterOpenFile_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Select a subtitle file you want to shift";
+            openFileDialog.DefaultExt = ".srt";
+            openFileDialog.Filter = "SRT files (*.srt)|*.srt|TXT files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _filePath = openFileDialog.FileName;
+
+                btnShifter.Enabled = true;
+                numericUpDownShifter.Enabled = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnShifter_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string srtContent = SubtitleFileHelper.ReadFile(_filePath);
+            var subtitles = SubtitleParser.Deserialize(srtContent);
+            subtitles = SubtitleShifter.ShiftAll(subtitles, Convert.ToInt32(numericUpDownShifter.Value));
+            srtContent = SubtitleParser.Serialize(subtitles);
+            SubtitleFileHelper.WriteFile(_filePath, srtContent);
+
+            MessageBox.Show("Subtitle shifting completed successfully!", 
+                "Shifting completed!", 
+                MessageBoxButtons.OK, 
+                MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
     #endregion
 
     #region PartialShifting
@@ -135,7 +181,7 @@ public partial class MainForm : Form
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 rtbxEditor.Text = SubtitleFileHelper.ReadFile(openFileDialog.FileName) ?? string.Empty;
-                _editorFilePath = openFileDialog.FileName;
+                _filePath = openFileDialog.FileName;
 
                 numericUpDownEditorId.Enabled = true;
                 btnEditorFind.Enabled = true;
@@ -283,7 +329,7 @@ public partial class MainForm : Form
         try
         {
             if (!string.IsNullOrWhiteSpace(rtbxEditor.Text)
-                && SubtitleFileHelper.WriteFile(_editorFilePath, rtbxEditor.Text))
+                && SubtitleFileHelper.WriteFile(_filePath, rtbxEditor.Text))
             {
                 MessageBox.Show("File saved successfully!",
                     "File saved successfully!",

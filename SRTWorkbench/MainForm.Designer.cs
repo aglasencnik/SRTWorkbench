@@ -61,13 +61,21 @@
             lblAboutProgramTitle = new Label();
             pbxAboutLogo = new PictureBox();
             lblAboutTitle = new Label();
+            lblShifterTitle = new Label();
+            btnShifterOpenFile = new Button();
+            lblShifterShiftText = new Label();
+            btnShifter = new Button();
+            numericUpDownShifter = new NumericUpDown();
+            lblShifterExplainText = new Label();
             tabControl.SuspendLayout();
+            tabPageShifter.SuspendLayout();
             tabPageEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownEditorId).BeginInit();
             tabPageApiSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbxApiSettingsImage).BeginInit();
             tabPageAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbxAboutLogo).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownShifter).BeginInit();
             SuspendLayout();
             // 
             // tabControl
@@ -112,20 +120,26 @@
             // tabPageShifter
             // 
             tabPageShifter.BackColor = Color.Gainsboro;
-            tabPageShifter.Location = new Point(4, 24);
+            tabPageShifter.Controls.Add(lblShifterExplainText);
+            tabPageShifter.Controls.Add(numericUpDownShifter);
+            tabPageShifter.Controls.Add(btnShifter);
+            tabPageShifter.Controls.Add(lblShifterShiftText);
+            tabPageShifter.Controls.Add(btnShifterOpenFile);
+            tabPageShifter.Controls.Add(lblShifterTitle);
+            tabPageShifter.Location = new Point(4, 30);
             tabPageShifter.Margin = new Padding(3, 4, 3, 4);
             tabPageShifter.Name = "tabPageShifter";
-            tabPageShifter.Size = new Size(754, 512);
+            tabPageShifter.Size = new Size(754, 506);
             tabPageShifter.TabIndex = 2;
             tabPageShifter.Text = "Shifter";
             // 
             // tabPagePartialShifter
             // 
             tabPagePartialShifter.BackColor = Color.Gainsboro;
-            tabPagePartialShifter.Location = new Point(4, 24);
+            tabPagePartialShifter.Location = new Point(4, 30);
             tabPagePartialShifter.Margin = new Padding(3, 4, 3, 4);
             tabPagePartialShifter.Name = "tabPagePartialShifter";
-            tabPagePartialShifter.Size = new Size(754, 512);
+            tabPagePartialShifter.Size = new Size(754, 506);
             tabPagePartialShifter.TabIndex = 3;
             tabPagePartialShifter.Text = "Partial Shifter";
             // 
@@ -285,10 +299,10 @@
             tabPageApiSettings.Controls.Add(lblApiSettingsApiKey);
             tabPageApiSettings.Controls.Add(pbxApiSettingsImage);
             tabPageApiSettings.Controls.Add(lblApiSettingsTitle);
-            tabPageApiSettings.Location = new Point(4, 24);
+            tabPageApiSettings.Location = new Point(4, 30);
             tabPageApiSettings.Margin = new Padding(3, 4, 3, 4);
             tabPageApiSettings.Name = "tabPageApiSettings";
-            tabPageApiSettings.Size = new Size(754, 512);
+            tabPageApiSettings.Size = new Size(754, 506);
             tabPageApiSettings.TabIndex = 5;
             tabPageApiSettings.Text = "API Settings";
             // 
@@ -368,10 +382,10 @@
             tabPageAbout.Controls.Add(lblAboutProgramTitle);
             tabPageAbout.Controls.Add(pbxAboutLogo);
             tabPageAbout.Controls.Add(lblAboutTitle);
-            tabPageAbout.Location = new Point(4, 24);
+            tabPageAbout.Location = new Point(4, 30);
             tabPageAbout.Margin = new Padding(3, 4, 3, 4);
             tabPageAbout.Name = "tabPageAbout";
-            tabPageAbout.Size = new Size(754, 512);
+            tabPageAbout.Size = new Size(754, 506);
             tabPageAbout.TabIndex = 6;
             tabPageAbout.Text = "About";
             // 
@@ -449,6 +463,75 @@
             lblAboutTitle.TabIndex = 0;
             lblAboutTitle.Text = "About this app";
             // 
+            // lblShifterTitle
+            // 
+            lblShifterTitle.AutoSize = true;
+            lblShifterTitle.BackColor = Color.Transparent;
+            lblShifterTitle.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblShifterTitle.Location = new Point(229, 37);
+            lblShifterTitle.Name = "lblShifterTitle";
+            lblShifterTitle.Size = new Size(286, 50);
+            lblShifterTitle.TabIndex = 3;
+            lblShifterTitle.Text = "Subtitle Shifter";
+            // 
+            // btnShifterOpenFile
+            // 
+            btnShifterOpenFile.BackColor = Color.Silver;
+            btnShifterOpenFile.Cursor = Cursors.Hand;
+            btnShifterOpenFile.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnShifterOpenFile.Location = new Point(35, 132);
+            btnShifterOpenFile.Name = "btnShifterOpenFile";
+            btnShifterOpenFile.Size = new Size(203, 72);
+            btnShifterOpenFile.TabIndex = 7;
+            btnShifterOpenFile.Text = "Open File";
+            btnShifterOpenFile.UseVisualStyleBackColor = false;
+            btnShifterOpenFile.Click += btnShifterOpenFile_Click;
+            // 
+            // lblShifterShiftText
+            // 
+            lblShifterShiftText.AutoSize = true;
+            lblShifterShiftText.BackColor = Color.Transparent;
+            lblShifterShiftText.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            lblShifterShiftText.Location = new Point(35, 240);
+            lblShifterShiftText.Name = "lblShifterShiftText";
+            lblShifterShiftText.Size = new Size(288, 37);
+            lblShifterShiftText.TabIndex = 8;
+            lblShifterShiftText.Text = "Shift (in milliseconds):";
+            // 
+            // btnShifter
+            // 
+            btnShifter.BackColor = Color.Silver;
+            btnShifter.Cursor = Cursors.Hand;
+            btnShifter.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnShifter.Location = new Point(275, 348);
+            btnShifter.Name = "btnShifter";
+            btnShifter.Size = new Size(203, 72);
+            btnShifter.TabIndex = 9;
+            btnShifter.Text = "Shift";
+            btnShifter.UseVisualStyleBackColor = false;
+            btnShifter.Click += btnShifter_Click;
+            // 
+            // numericUpDownShifter
+            // 
+            numericUpDownShifter.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            numericUpDownShifter.Location = new Point(329, 242);
+            numericUpDownShifter.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
+            numericUpDownShifter.Minimum = new decimal(new int[] { 1000000000, 0, 0, int.MinValue });
+            numericUpDownShifter.Name = "numericUpDownShifter";
+            numericUpDownShifter.Size = new Size(149, 39);
+            numericUpDownShifter.TabIndex = 10;
+            // 
+            // lblShifterExplainText
+            // 
+            lblShifterExplainText.AutoSize = true;
+            lblShifterExplainText.BackColor = Color.Transparent;
+            lblShifterExplainText.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            lblShifterExplainText.Location = new Point(35, 289);
+            lblShifterExplainText.Name = "lblShifterExplainText";
+            lblShifterExplainText.Size = new Size(259, 25);
+            lblShifterExplainText.TabIndex = 11;
+            lblShifterExplainText.Text = "1 second = 1000 milliseconds";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
@@ -466,6 +549,8 @@
             Text = "SRT Workbench";
             Load += MainForm_Load;
             tabControl.ResumeLayout(false);
+            tabPageShifter.ResumeLayout(false);
+            tabPageShifter.PerformLayout();
             tabPageEditor.ResumeLayout(false);
             tabPageEditor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownEditorId).EndInit();
@@ -475,6 +560,7 @@
             tabPageAbout.ResumeLayout(false);
             tabPageAbout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pbxAboutLogo).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownShifter).EndInit();
             ResumeLayout(false);
         }
 
@@ -512,5 +598,11 @@
         private Label lblEditorSearchText;
         private Label lblEditorOrText;
         private Label lblEditorCtrlSText;
+        private Label lblShifterTitle;
+        private Button btnShifterOpenFile;
+        private Label lblShifterShiftText;
+        private Button btnShifter;
+        private NumericUpDown numericUpDownShifter;
+        private Label lblShifterExplainText;
     }
 }
