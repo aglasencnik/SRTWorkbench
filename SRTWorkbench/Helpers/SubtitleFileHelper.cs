@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using UtfUnknown;
 
 namespace SRTWorkbench.Helpers;
 
@@ -13,7 +14,11 @@ public static class SubtitleFileHelper
         }
 
         // Read file with automatic encoding detection
-        using var reader = new StreamReader(path, true);
+        var bytes = File.ReadAllBytes(path);
+        var chardet = CharsetDetector.DetectFromBytes(bytes);
+        string encodingName = chardet.Detected.EncodingName;
+
+        using var reader = new StreamReader(path, Encoding.GetEncoding(encodingName));
         return reader.ReadToEnd();
     }
 

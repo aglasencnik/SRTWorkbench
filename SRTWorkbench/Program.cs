@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace SRTWorkbench;
 
 internal static class Program
@@ -7,6 +9,7 @@ internal static class Program
     {
         try
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
         }
