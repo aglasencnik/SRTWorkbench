@@ -1,6 +1,7 @@
 using CredentialManagement;
 using SRTWorkbench.Helpers;
 using SRTWorkbench.Models;
+using SRTWorkbench.UserControls;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
@@ -79,7 +80,20 @@ public partial class MainForm : Form
             }
             else if (currentPage == tabPagePartialShifter)
             {
+                btnPartialShifter.Enabled = false;
+                partialShifterPanel.Enabled = false;
 
+                partialShifterPanel.Controls.Clear();
+                partialShifterPanel.Controls.Add(new PartialShifterHeaderControl());
+
+                var partialShifterRuleControl = new PartialShifterRuleControl();
+                partialShifterRuleControl.Id = Guid.NewGuid();
+                partialShifterRuleControl.RemoveButtonClicked += RemoveRuleControl;
+                partialShifterPanel.Controls.Add(partialShifterRuleControl);
+
+                var partialShifterAddControl = new PartialShifterAddControl();
+                partialShifterAddControl.AddButtonClicked += AddRuleControl;
+                partialShifterPanel.Controls.Add(partialShifterAddControl);
             }
             else if (currentPage == tabPageEditor)
             {
@@ -153,9 +167,9 @@ public partial class MainForm : Form
             srtContent = SubtitleParser.Serialize(subtitles);
             SubtitleFileHelper.WriteFile(_filePath, srtContent);
 
-            MessageBox.Show("Subtitle shifting completed successfully!", 
-                "Shifting completed!", 
-                MessageBoxButtons.OK, 
+            MessageBox.Show("Subtitle shifting completed successfully!",
+                "Shifting completed!",
+                MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
         catch (Exception ex)
@@ -166,6 +180,104 @@ public partial class MainForm : Form
     #endregion
 
     #region PartialShifting
+    private void btnPartialShifterOpenFile_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Select a subtitle file you want to shift";
+            openFileDialog.DefaultExt = ".srt";
+            openFileDialog.Filter = "SRT files (*.srt)|*.srt|TXT files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _filePath = openFileDialog.FileName;
+
+                btnPartialShifter.Enabled = true;
+                partialShifterPanel.Enabled = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnPartialShifter_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            var shifts = new List<Tuple<TimeSpan, TimeSpan, int>>();
+
+            foreach (var control in partialShifterPanel.Controls.OfType<PartialShifterRuleControl>())
+            {
+                if (control.IsCompleted)
+                {
+                    shifts.Add(new Tuple<TimeSpan, TimeSpan, int>(control.ShiftStart, control.ShiftEnd, control.ShiftAmount));
+                }
+            }
+
+            string srtContent = SubtitleFileHelper.ReadFile(_filePath);
+            var subtitles = SubtitleParser.Deserialize(srtContent);
+            subtitles = SubtitleShifter.ShiftPartial(subtitles, shifts);
+            srtContent = SubtitleParser.Serialize(subtitles);
+            SubtitleFileHelper.WriteFile(_filePath, srtContent);
+
+            MessageBox.Show("Subtitle shifting completed successfully!",
+                "Shifting completed!",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void AddRuleControl(object sender, EventArgs e)
+    {
+        try
+        {
+            partialShifterPanel.Controls.RemoveAt(partialShifterPanel.Controls.Count - 1);
+
+            var partialShifterRuleControl = new PartialShifterRuleControl();
+            partialShifterRuleControl.Id = Guid.NewGuid();
+            partialShifterRuleControl.RemoveButtonClicked += RemoveRuleControl;
+            partialShifterPanel.Controls.Add(partialShifterRuleControl);
+
+            var partialShifterAddControl = new PartialShifterAddControl();
+            partialShifterAddControl.AddButtonClicked += AddRuleControl;
+            partialShifterPanel.Controls.Add(partialShifterAddControl);
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void RemoveRuleControl(object sender, CustomEventArgs e)
+    {
+        try
+        {
+            int index = -1;
+
+            for (int i = 0; i < partialShifterPanel.Controls.Count; i++)
+            {
+                if (partialShifterPanel.Controls[i] is PartialShifterRuleControl)
+                {
+                    var control = (PartialShifterRuleControl)partialShifterPanel.Controls[i];
+
+                    if (control != null && control.Id == e.Id) index = i;
+                }
+            }
+
+            if (index >= 0) partialShifterPanel.Controls.RemoveAt(index);
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
     #endregion
 
     #region Editor
