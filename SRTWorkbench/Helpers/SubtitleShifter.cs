@@ -4,7 +4,7 @@ namespace SRTWorkbench.Helpers;
 
 public static class SubtitleShifter
 {
-    public static List<Subtitle> ShiftAll(List<Subtitle> subtitles, int shiftAmountMilliseconds)
+    public static List<SubtitleModel> ShiftAll(List<SubtitleModel> subtitles, int shiftAmountMilliseconds)
     {
         var shiftAmount = TimeSpan.FromMilliseconds(shiftAmountMilliseconds);
 
@@ -16,7 +16,7 @@ public static class SubtitleShifter
         return subtitles;
     }
 
-    public static List<Subtitle> ShiftPartial(List<Subtitle> subtitles, List<Tuple<TimeSpan, TimeSpan, int>> shifts)
+    public static List<SubtitleModel> ShiftPartial(List<SubtitleModel> subtitles, List<Tuple<TimeSpan, TimeSpan, int>> shifts)
     {
         foreach (var shift in shifts)
         {
@@ -36,7 +36,7 @@ public static class SubtitleShifter
         return subtitles;
     }
 
-    private static void ShiftSubtitle(Subtitle subtitle, TimeSpan shiftAmount)
+    private static void ShiftSubtitle(SubtitleModel subtitle, TimeSpan shiftAmount)
     {
         var startTime = subtitle.StartTime + shiftAmount;
         var endTime = subtitle.EndTime + shiftAmount;

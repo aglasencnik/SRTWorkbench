@@ -41,6 +41,22 @@
             pbxHomeLogo = new PictureBox();
             lblHomeTitle = new Label();
             tabPageTranslator = new TabPage();
+            cbxTranslatorAutomaticallyDetect = new CheckBox();
+            lblTranslatorUsage = new Label();
+            btnTranslatorTranslate = new Button();
+            lblTranslatorNote = new Label();
+            checkedListBoxTranslatorTarget = new CheckedListBox();
+            lblTranslatorTargetLanguage = new Label();
+            cbxTranslatorSource = new ComboBox();
+            lblTranslatorSourceLanguage = new Label();
+            btnTranslatorTarget = new Button();
+            btnTranslatorSource = new Button();
+            tbxTranslatorTarget = new TextBox();
+            tbxTranslatorSource = new TextBox();
+            lblTranslatorTarget = new Label();
+            lblTranslatorSource = new Label();
+            lblTranslatorTitle = new Label();
+            progressBarTranslator = new ProgressBar();
             tabPageShifter = new TabPage();
             lblShifterExplainText = new Label();
             numericUpDownShifter = new NumericUpDown();
@@ -84,6 +100,7 @@
             tabControl.SuspendLayout();
             tabPageHome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbxHomeLogo).BeginInit();
+            tabPageTranslator.SuspendLayout();
             tabPageShifter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownShifter).BeginInit();
             tabPagePartialShifter.SuspendLayout();
@@ -242,6 +259,22 @@
             // tabPageTranslator
             // 
             tabPageTranslator.BackColor = Color.Gainsboro;
+            tabPageTranslator.Controls.Add(cbxTranslatorAutomaticallyDetect);
+            tabPageTranslator.Controls.Add(lblTranslatorUsage);
+            tabPageTranslator.Controls.Add(btnTranslatorTranslate);
+            tabPageTranslator.Controls.Add(lblTranslatorNote);
+            tabPageTranslator.Controls.Add(checkedListBoxTranslatorTarget);
+            tabPageTranslator.Controls.Add(lblTranslatorTargetLanguage);
+            tabPageTranslator.Controls.Add(cbxTranslatorSource);
+            tabPageTranslator.Controls.Add(lblTranslatorSourceLanguage);
+            tabPageTranslator.Controls.Add(btnTranslatorTarget);
+            tabPageTranslator.Controls.Add(btnTranslatorSource);
+            tabPageTranslator.Controls.Add(tbxTranslatorTarget);
+            tabPageTranslator.Controls.Add(tbxTranslatorSource);
+            tabPageTranslator.Controls.Add(lblTranslatorTarget);
+            tabPageTranslator.Controls.Add(lblTranslatorSource);
+            tabPageTranslator.Controls.Add(lblTranslatorTitle);
+            tabPageTranslator.Controls.Add(progressBarTranslator);
             tabPageTranslator.Location = new Point(4, 30);
             tabPageTranslator.Margin = new Padding(2);
             tabPageTranslator.Name = "tabPageTranslator";
@@ -249,6 +282,179 @@
             tabPageTranslator.Size = new Size(754, 506);
             tabPageTranslator.TabIndex = 1;
             tabPageTranslator.Text = "Translator";
+            // 
+            // cbxTranslatorAutomaticallyDetect
+            // 
+            cbxTranslatorAutomaticallyDetect.AutoSize = true;
+            cbxTranslatorAutomaticallyDetect.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            cbxTranslatorAutomaticallyDetect.Location = new Point(448, 169);
+            cbxTranslatorAutomaticallyDetect.Name = "cbxTranslatorAutomaticallyDetect";
+            cbxTranslatorAutomaticallyDetect.Size = new Size(293, 29);
+            cbxTranslatorAutomaticallyDetect.TabIndex = 18;
+            cbxTranslatorAutomaticallyDetect.Text = "Automatically Detect Language";
+            cbxTranslatorAutomaticallyDetect.UseVisualStyleBackColor = true;
+            cbxTranslatorAutomaticallyDetect.CheckedChanged += cbxTranslatorAutomaticallyDetect_CheckedChanged;
+            // 
+            // lblTranslatorUsage
+            // 
+            lblTranslatorUsage.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            lblTranslatorUsage.Location = new Point(15, 402);
+            lblTranslatorUsage.Name = "lblTranslatorUsage";
+            lblTranslatorUsage.Size = new Size(721, 30);
+            lblTranslatorUsage.TabIndex = 17;
+            lblTranslatorUsage.Text = "Usage message";
+            // 
+            // btnTranslatorTranslate
+            // 
+            btnTranslatorTranslate.BackColor = Color.Silver;
+            btnTranslatorTranslate.Cursor = Cursors.Hand;
+            btnTranslatorTranslate.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnTranslatorTranslate.Location = new Point(618, 450);
+            btnTranslatorTranslate.Name = "btnTranslatorTranslate";
+            btnTranslatorTranslate.Size = new Size(118, 40);
+            btnTranslatorTranslate.TabIndex = 16;
+            btnTranslatorTranslate.Text = "Translate";
+            btnTranslatorTranslate.UseVisualStyleBackColor = false;
+            btnTranslatorTranslate.Click += btnTranslatorTranslate_Click;
+            // 
+            // lblTranslatorNote
+            // 
+            lblTranslatorNote.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            lblTranslatorNote.Location = new Point(15, 255);
+            lblTranslatorNote.Name = "lblTranslatorNote";
+            lblTranslatorNote.Size = new Size(178, 128);
+            lblTranslatorNote.TabIndex = 15;
+            lblTranslatorNote.Text = "Note: Selecting multiple target languages will automatically append the corresponding language extension to the end of each file.";
+            lblTranslatorNote.TextAlign = ContentAlignment.TopCenter;
+            // 
+            // checkedListBoxTranslatorTarget
+            // 
+            checkedListBoxTranslatorTarget.ColumnWidth = 200;
+            checkedListBoxTranslatorTarget.FormattingEnabled = true;
+            checkedListBoxTranslatorTarget.Location = new Point(193, 225);
+            checkedListBoxTranslatorTarget.MultiColumn = true;
+            checkedListBoxTranslatorTarget.Name = "checkedListBoxTranslatorTarget";
+            checkedListBoxTranslatorTarget.ScrollAlwaysVisible = true;
+            checkedListBoxTranslatorTarget.Size = new Size(544, 148);
+            checkedListBoxTranslatorTarget.TabIndex = 14;
+            checkedListBoxTranslatorTarget.SelectedIndexChanged += checkedListBoxTranslatorTarget_SelectedIndexChanged;
+            // 
+            // lblTranslatorTargetLanguage
+            // 
+            lblTranslatorTargetLanguage.AutoSize = true;
+            lblTranslatorTargetLanguage.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lblTranslatorTargetLanguage.Location = new Point(15, 225);
+            lblTranslatorTargetLanguage.Name = "lblTranslatorTargetLanguage";
+            lblTranslatorTargetLanguage.Size = new Size(172, 30);
+            lblTranslatorTargetLanguage.TabIndex = 13;
+            lblTranslatorTargetLanguage.Text = "Target Language:";
+            // 
+            // cbxTranslatorSource
+            // 
+            cbxTranslatorSource.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbxTranslatorSource.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            cbxTranslatorSource.FormattingEnabled = true;
+            cbxTranslatorSource.Location = new Point(192, 163);
+            cbxTranslatorSource.Name = "cbxTranslatorSource";
+            cbxTranslatorSource.Size = new Size(250, 38);
+            cbxTranslatorSource.TabIndex = 12;
+            cbxTranslatorSource.SelectionChangeCommitted += cbxTranslatorSource_SelectionChangeCommitted;
+            // 
+            // lblTranslatorSourceLanguage
+            // 
+            lblTranslatorSourceLanguage.AutoSize = true;
+            lblTranslatorSourceLanguage.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lblTranslatorSourceLanguage.Location = new Point(8, 166);
+            lblTranslatorSourceLanguage.Name = "lblTranslatorSourceLanguage";
+            lblTranslatorSourceLanguage.Size = new Size(178, 30);
+            lblTranslatorSourceLanguage.TabIndex = 11;
+            lblTranslatorSourceLanguage.Text = "Source Language:";
+            // 
+            // btnTranslatorTarget
+            // 
+            btnTranslatorTarget.BackColor = Color.Silver;
+            btnTranslatorTarget.Cursor = Cursors.Hand;
+            btnTranslatorTarget.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnTranslatorTarget.Location = new Point(618, 108);
+            btnTranslatorTarget.Name = "btnTranslatorTarget";
+            btnTranslatorTarget.Size = new Size(118, 35);
+            btnTranslatorTarget.TabIndex = 10;
+            btnTranslatorTarget.Text = "Select";
+            btnTranslatorTarget.UseVisualStyleBackColor = false;
+            btnTranslatorTarget.Click += btnTranslatorTarget_Click;
+            // 
+            // btnTranslatorSource
+            // 
+            btnTranslatorSource.BackColor = Color.Silver;
+            btnTranslatorSource.Cursor = Cursors.Hand;
+            btnTranslatorSource.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnTranslatorSource.Location = new Point(618, 59);
+            btnTranslatorSource.Name = "btnTranslatorSource";
+            btnTranslatorSource.Size = new Size(118, 35);
+            btnTranslatorSource.TabIndex = 9;
+            btnTranslatorSource.Text = "Select";
+            btnTranslatorSource.UseVisualStyleBackColor = false;
+            btnTranslatorSource.Click += btnTranslatorSource_Click;
+            // 
+            // tbxTranslatorTarget
+            // 
+            tbxTranslatorTarget.BackColor = Color.Gainsboro;
+            tbxTranslatorTarget.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            tbxTranslatorTarget.Location = new Point(126, 108);
+            tbxTranslatorTarget.MaxLength = 256;
+            tbxTranslatorTarget.Name = "tbxTranslatorTarget";
+            tbxTranslatorTarget.Size = new Size(486, 35);
+            tbxTranslatorTarget.TabIndex = 8;
+            tbxTranslatorTarget.TextChanged += tbxTranslatorTarget_TextChanged;
+            // 
+            // tbxTranslatorSource
+            // 
+            tbxTranslatorSource.BackColor = Color.Gainsboro;
+            tbxTranslatorSource.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            tbxTranslatorSource.Location = new Point(126, 59);
+            tbxTranslatorSource.MaxLength = 256;
+            tbxTranslatorSource.Name = "tbxTranslatorSource";
+            tbxTranslatorSource.Size = new Size(486, 35);
+            tbxTranslatorSource.TabIndex = 7;
+            tbxTranslatorSource.TextChanged += tbxTranslatorSource_TextChanged;
+            // 
+            // lblTranslatorTarget
+            // 
+            lblTranslatorTarget.AutoSize = true;
+            lblTranslatorTarget.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lblTranslatorTarget.Location = new Point(8, 108);
+            lblTranslatorTarget.Name = "lblTranslatorTarget";
+            lblTranslatorTarget.Size = new Size(112, 30);
+            lblTranslatorTarget.TabIndex = 6;
+            lblTranslatorTarget.Text = "Target File:";
+            // 
+            // lblTranslatorSource
+            // 
+            lblTranslatorSource.AutoSize = true;
+            lblTranslatorSource.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lblTranslatorSource.Location = new Point(2, 59);
+            lblTranslatorSource.Name = "lblTranslatorSource";
+            lblTranslatorSource.Size = new Size(118, 30);
+            lblTranslatorSource.TabIndex = 5;
+            lblTranslatorSource.Text = "Source File:";
+            // 
+            // lblTranslatorTitle
+            // 
+            lblTranslatorTitle.AutoSize = true;
+            lblTranslatorTitle.BackColor = Color.Transparent;
+            lblTranslatorTitle.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTranslatorTitle.Location = new Point(266, 2);
+            lblTranslatorTitle.Name = "lblTranslatorTitle";
+            lblTranslatorTitle.Size = new Size(197, 50);
+            lblTranslatorTitle.TabIndex = 4;
+            lblTranslatorTitle.Text = "Translator";
+            // 
+            // progressBarTranslator
+            // 
+            progressBarTranslator.Location = new Point(15, 450);
+            progressBarTranslator.Name = "progressBarTranslator";
+            progressBarTranslator.Size = new Size(597, 40);
+            progressBarTranslator.TabIndex = 0;
             // 
             // tabPageShifter
             // 
@@ -259,10 +465,10 @@
             tabPageShifter.Controls.Add(lblShifterShiftText);
             tabPageShifter.Controls.Add(btnShifterOpenFile);
             tabPageShifter.Controls.Add(lblShifterTitle);
-            tabPageShifter.Location = new Point(4, 30);
+            tabPageShifter.Location = new Point(4, 24);
             tabPageShifter.Margin = new Padding(3, 4, 3, 4);
             tabPageShifter.Name = "tabPageShifter";
-            tabPageShifter.Size = new Size(754, 506);
+            tabPageShifter.Size = new Size(754, 512);
             tabPageShifter.TabIndex = 2;
             tabPageShifter.Text = "Shifter";
             // 
@@ -343,10 +549,10 @@
             tabPagePartialShifter.Controls.Add(btnPartialShifter);
             tabPagePartialShifter.Controls.Add(btnPartialShifterOpenFile);
             tabPagePartialShifter.Controls.Add(lblPartialShifterTitle);
-            tabPagePartialShifter.Location = new Point(4, 30);
+            tabPagePartialShifter.Location = new Point(4, 24);
             tabPagePartialShifter.Margin = new Padding(0, 5, 0, 5);
             tabPagePartialShifter.Name = "tabPagePartialShifter";
-            tabPagePartialShifter.Size = new Size(754, 506);
+            tabPagePartialShifter.Size = new Size(754, 512);
             tabPagePartialShifter.TabIndex = 3;
             tabPagePartialShifter.Text = "Partial Shifter";
             // 
@@ -422,10 +628,10 @@
             tabPageEditor.Controls.Add(btnEditorOpenFile);
             tabPageEditor.Controls.Add(lblEditorTitle);
             tabPageEditor.Controls.Add(rtbxEditor);
-            tabPageEditor.Location = new Point(4, 30);
+            tabPageEditor.Location = new Point(4, 24);
             tabPageEditor.Margin = new Padding(3, 4, 3, 4);
             tabPageEditor.Name = "tabPageEditor";
-            tabPageEditor.Size = new Size(754, 506);
+            tabPageEditor.Size = new Size(754, 512);
             tabPageEditor.TabIndex = 4;
             tabPageEditor.Text = "Editor";
             // 
@@ -564,10 +770,10 @@
             tabPageApiSettings.Controls.Add(lblApiSettingsApiKey);
             tabPageApiSettings.Controls.Add(pbxApiSettingsImage);
             tabPageApiSettings.Controls.Add(lblApiSettingsTitle);
-            tabPageApiSettings.Location = new Point(4, 30);
+            tabPageApiSettings.Location = new Point(4, 24);
             tabPageApiSettings.Margin = new Padding(3, 4, 3, 4);
             tabPageApiSettings.Name = "tabPageApiSettings";
-            tabPageApiSettings.Size = new Size(754, 506);
+            tabPageApiSettings.Size = new Size(754, 512);
             tabPageApiSettings.TabIndex = 5;
             tabPageApiSettings.Text = "API Settings";
             // 
@@ -647,10 +853,10 @@
             tabPageAbout.Controls.Add(lblAboutProgramTitle);
             tabPageAbout.Controls.Add(pbxAboutLogo);
             tabPageAbout.Controls.Add(lblAboutTitle);
-            tabPageAbout.Location = new Point(4, 30);
+            tabPageAbout.Location = new Point(4, 24);
             tabPageAbout.Margin = new Padding(3, 4, 3, 4);
             tabPageAbout.Name = "tabPageAbout";
-            tabPageAbout.Size = new Size(754, 506);
+            tabPageAbout.Size = new Size(754, 512);
             tabPageAbout.TabIndex = 6;
             tabPageAbout.Text = "About";
             // 
@@ -748,6 +954,8 @@
             tabPageHome.ResumeLayout(false);
             tabPageHome.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pbxHomeLogo).EndInit();
+            tabPageTranslator.ResumeLayout(false);
+            tabPageTranslator.PerformLayout();
             tabPageShifter.ResumeLayout(false);
             tabPageShifter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownShifter).EndInit();
@@ -819,5 +1027,21 @@
         private Button btnHomePartialShifter;
         private Button btnHomeShifter;
         private Button btnHomeTranslator;
+        private ProgressBar progressBarTranslator;
+        private Label lblTranslatorTitle;
+        private Button btnTranslatorTarget;
+        private Button btnTranslatorSource;
+        private TextBox tbxTranslatorTarget;
+        private TextBox tbxTranslatorSource;
+        private Label lblTranslatorTarget;
+        private Label lblTranslatorSource;
+        private ComboBox cbxTranslatorSource;
+        private Label lblTranslatorSourceLanguage;
+        private Label lblTranslatorTargetLanguage;
+        private CheckedListBox checkedListBoxTranslatorTarget;
+        private Label lblTranslatorNote;
+        private Button btnTranslatorTranslate;
+        private Label lblTranslatorUsage;
+        private CheckBox cbxTranslatorAutomaticallyDetect;
     }
 }

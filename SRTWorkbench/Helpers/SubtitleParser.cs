@@ -6,7 +6,7 @@ namespace SRTWorkbench.Helpers;
 
 public static class SubtitleParser
 {
-    public static string Serialize(List<Subtitle> subtitles)
+    public static string Serialize(List<SubtitleModel> subtitles)
     {
         var sb = new StringBuilder();
         foreach (var subtitle in subtitles)
@@ -19,14 +19,14 @@ public static class SubtitleParser
         return sb.ToString();
     }
 
-    public static List<Subtitle> Deserialize(string data)
+    public static List<SubtitleModel> Deserialize(string data)
     {
         var subtitleBlocks = data.Split(
             new[] { "\r\n\r\n", "\r\r", "\n\n" },
             StringSplitOptions.RemoveEmptyEntries
         );
 
-        var subtitles = new List<Subtitle>();
+        var subtitles = new List<SubtitleModel>();
         foreach (var block in subtitleBlocks)
         {
             var lines = block.Split(
@@ -34,7 +34,7 @@ public static class SubtitleParser
                 StringSplitOptions.None
             );
 
-            var subtitle = new Subtitle
+            var subtitle = new SubtitleModel
             {
                 Id = TryParseId(lines[0]),
                 StartTime = TryParseTime(lines[1].Split(" --> ")[0]),
