@@ -31,7 +31,16 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tabControl = new TabControl();
             tabPageHome = new TabPage();
-            tabPageTranslation = new TabPage();
+            btnHomeAbout = new Button();
+            btnHomeApiSettings = new Button();
+            btnHomeEditor = new Button();
+            btnHomePartialShifter = new Button();
+            btnHomeShifter = new Button();
+            btnHomeTranslator = new Button();
+            lblHomeTitle2 = new Label();
+            pbxHomeLogo = new PictureBox();
+            lblHomeTitle = new Label();
+            tabPageTranslator = new TabPage();
             tabPageShifter = new TabPage();
             lblShifterExplainText = new Label();
             numericUpDownShifter = new NumericUpDown();
@@ -40,7 +49,7 @@
             btnShifterOpenFile = new Button();
             lblShifterTitle = new Label();
             tabPagePartialShifter = new TabPage();
-            label1 = new Label();
+            lblPartialShifterConversion = new Label();
             partialShifterPanel = new FlowLayoutPanel();
             btnPartialShifter = new Button();
             btnPartialShifterOpenFile = new Button();
@@ -73,6 +82,8 @@
             pbxAboutLogo = new PictureBox();
             lblAboutTitle = new Label();
             tabControl.SuspendLayout();
+            tabPageHome.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pbxHomeLogo).BeginInit();
             tabPageShifter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownShifter).BeginInit();
             tabPagePartialShifter.SuspendLayout();
@@ -87,7 +98,7 @@
             // tabControl
             // 
             tabControl.Controls.Add(tabPageHome);
-            tabControl.Controls.Add(tabPageTranslation);
+            tabControl.Controls.Add(tabPageTranslator);
             tabControl.Controls.Add(tabPageShifter);
             tabControl.Controls.Add(tabPagePartialShifter);
             tabControl.Controls.Add(tabPageEditor);
@@ -104,6 +115,15 @@
             // tabPageHome
             // 
             tabPageHome.BackColor = Color.Gainsboro;
+            tabPageHome.Controls.Add(btnHomeAbout);
+            tabPageHome.Controls.Add(btnHomeApiSettings);
+            tabPageHome.Controls.Add(btnHomeEditor);
+            tabPageHome.Controls.Add(btnHomePartialShifter);
+            tabPageHome.Controls.Add(btnHomeShifter);
+            tabPageHome.Controls.Add(btnHomeTranslator);
+            tabPageHome.Controls.Add(lblHomeTitle2);
+            tabPageHome.Controls.Add(pbxHomeLogo);
+            tabPageHome.Controls.Add(lblHomeTitle);
             tabPageHome.Location = new Point(4, 30);
             tabPageHome.Margin = new Padding(0);
             tabPageHome.Name = "tabPageHome";
@@ -111,16 +131,124 @@
             tabPageHome.TabIndex = 0;
             tabPageHome.Text = "Home";
             // 
-            // tabPageTranslation
+            // btnHomeAbout
             // 
-            tabPageTranslation.BackColor = Color.Gainsboro;
-            tabPageTranslation.Location = new Point(4, 24);
-            tabPageTranslation.Margin = new Padding(2);
-            tabPageTranslation.Name = "tabPageTranslation";
-            tabPageTranslation.Padding = new Padding(2);
-            tabPageTranslation.Size = new Size(754, 512);
-            tabPageTranslation.TabIndex = 1;
-            tabPageTranslation.Text = "Translation";
+            btnHomeAbout.BackColor = Color.Silver;
+            btnHomeAbout.Cursor = Cursors.Hand;
+            btnHomeAbout.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnHomeAbout.Location = new Point(527, 409);
+            btnHomeAbout.Name = "btnHomeAbout";
+            btnHomeAbout.Size = new Size(203, 72);
+            btnHomeAbout.TabIndex = 13;
+            btnHomeAbout.Text = "About";
+            btnHomeAbout.UseVisualStyleBackColor = false;
+            btnHomeAbout.Click += btnHomeAbout_Click;
+            // 
+            // btnHomeApiSettings
+            // 
+            btnHomeApiSettings.BackColor = Color.Silver;
+            btnHomeApiSettings.Cursor = Cursors.Hand;
+            btnHomeApiSettings.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnHomeApiSettings.Location = new Point(527, 320);
+            btnHomeApiSettings.Name = "btnHomeApiSettings";
+            btnHomeApiSettings.Size = new Size(203, 72);
+            btnHomeApiSettings.TabIndex = 12;
+            btnHomeApiSettings.Text = "API Settings";
+            btnHomeApiSettings.UseVisualStyleBackColor = false;
+            btnHomeApiSettings.Click += btnHomeApiSettings_Click;
+            // 
+            // btnHomeEditor
+            // 
+            btnHomeEditor.BackColor = Color.Silver;
+            btnHomeEditor.Cursor = Cursors.Hand;
+            btnHomeEditor.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnHomeEditor.Location = new Point(527, 232);
+            btnHomeEditor.Name = "btnHomeEditor";
+            btnHomeEditor.Size = new Size(203, 72);
+            btnHomeEditor.TabIndex = 11;
+            btnHomeEditor.Text = "Editor";
+            btnHomeEditor.UseVisualStyleBackColor = false;
+            btnHomeEditor.Click += btnHomeEditor_Click;
+            // 
+            // btnHomePartialShifter
+            // 
+            btnHomePartialShifter.BackColor = Color.Silver;
+            btnHomePartialShifter.Cursor = Cursors.Hand;
+            btnHomePartialShifter.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnHomePartialShifter.Location = new Point(21, 409);
+            btnHomePartialShifter.Name = "btnHomePartialShifter";
+            btnHomePartialShifter.Size = new Size(203, 72);
+            btnHomePartialShifter.TabIndex = 10;
+            btnHomePartialShifter.Text = "Partial Shifter";
+            btnHomePartialShifter.UseVisualStyleBackColor = false;
+            btnHomePartialShifter.Click += btnHomePartialShifter_Click;
+            // 
+            // btnHomeShifter
+            // 
+            btnHomeShifter.BackColor = Color.Silver;
+            btnHomeShifter.Cursor = Cursors.Hand;
+            btnHomeShifter.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnHomeShifter.Location = new Point(21, 320);
+            btnHomeShifter.Name = "btnHomeShifter";
+            btnHomeShifter.Size = new Size(203, 72);
+            btnHomeShifter.TabIndex = 9;
+            btnHomeShifter.Text = "Shifter";
+            btnHomeShifter.UseVisualStyleBackColor = false;
+            btnHomeShifter.Click += btnHomeShifter_Click;
+            // 
+            // btnHomeTranslator
+            // 
+            btnHomeTranslator.BackColor = Color.Silver;
+            btnHomeTranslator.Cursor = Cursors.Hand;
+            btnHomeTranslator.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnHomeTranslator.Location = new Point(21, 232);
+            btnHomeTranslator.Name = "btnHomeTranslator";
+            btnHomeTranslator.Size = new Size(203, 72);
+            btnHomeTranslator.TabIndex = 8;
+            btnHomeTranslator.Text = "Translator";
+            btnHomeTranslator.UseVisualStyleBackColor = false;
+            btnHomeTranslator.Click += btnHomeTranslator_Click;
+            // 
+            // lblHomeTitle2
+            // 
+            lblHomeTitle2.Font = new Font("Segoe UI Semibold", 26.25F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHomeTitle2.Location = new Point(172, 105);
+            lblHomeTitle2.Name = "lblHomeTitle2";
+            lblHomeTitle2.Size = new Size(422, 124);
+            lblHomeTitle2.TabIndex = 3;
+            lblHomeTitle2.Text = "Ultimate tool for subtitle translation and shifting";
+            lblHomeTitle2.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // pbxHomeLogo
+            // 
+            pbxHomeLogo.BackgroundImage = Properties.Resources.SRTWB_logo;
+            pbxHomeLogo.BackgroundImageLayout = ImageLayout.Stretch;
+            pbxHomeLogo.Location = new Point(250, 231);
+            pbxHomeLogo.Name = "pbxHomeLogo";
+            pbxHomeLogo.Size = new Size(250, 250);
+            pbxHomeLogo.TabIndex = 2;
+            pbxHomeLogo.TabStop = false;
+            // 
+            // lblHomeTitle
+            // 
+            lblHomeTitle.AutoSize = true;
+            lblHomeTitle.Font = new Font("Segoe UI Black", 48F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHomeTitle.Location = new Point(109, 19);
+            lblHomeTitle.Name = "lblHomeTitle";
+            lblHomeTitle.Size = new Size(540, 86);
+            lblHomeTitle.TabIndex = 1;
+            lblHomeTitle.Text = "SRT Workbench";
+            // 
+            // tabPageTranslator
+            // 
+            tabPageTranslator.BackColor = Color.Gainsboro;
+            tabPageTranslator.Location = new Point(4, 30);
+            tabPageTranslator.Margin = new Padding(2);
+            tabPageTranslator.Name = "tabPageTranslator";
+            tabPageTranslator.Padding = new Padding(2);
+            tabPageTranslator.Size = new Size(754, 506);
+            tabPageTranslator.TabIndex = 1;
+            tabPageTranslator.Text = "Translator";
             // 
             // tabPageShifter
             // 
@@ -131,10 +259,10 @@
             tabPageShifter.Controls.Add(lblShifterShiftText);
             tabPageShifter.Controls.Add(btnShifterOpenFile);
             tabPageShifter.Controls.Add(lblShifterTitle);
-            tabPageShifter.Location = new Point(4, 24);
+            tabPageShifter.Location = new Point(4, 30);
             tabPageShifter.Margin = new Padding(3, 4, 3, 4);
             tabPageShifter.Name = "tabPageShifter";
-            tabPageShifter.Size = new Size(754, 512);
+            tabPageShifter.Size = new Size(754, 506);
             tabPageShifter.TabIndex = 2;
             tabPageShifter.Text = "Shifter";
             // 
@@ -210,7 +338,7 @@
             // tabPagePartialShifter
             // 
             tabPagePartialShifter.BackColor = Color.Gainsboro;
-            tabPagePartialShifter.Controls.Add(label1);
+            tabPagePartialShifter.Controls.Add(lblPartialShifterConversion);
             tabPagePartialShifter.Controls.Add(partialShifterPanel);
             tabPagePartialShifter.Controls.Add(btnPartialShifter);
             tabPagePartialShifter.Controls.Add(btnPartialShifterOpenFile);
@@ -222,16 +350,16 @@
             tabPagePartialShifter.TabIndex = 3;
             tabPagePartialShifter.Text = "Partial Shifter";
             // 
-            // label1
+            // lblPartialShifterConversion
             // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(10, 265);
-            label1.Name = "label1";
-            label1.Size = new Size(259, 25);
-            label1.TabIndex = 12;
-            label1.Text = "1 second = 1000 milliseconds";
+            lblPartialShifterConversion.AutoSize = true;
+            lblPartialShifterConversion.BackColor = Color.Transparent;
+            lblPartialShifterConversion.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            lblPartialShifterConversion.Location = new Point(10, 265);
+            lblPartialShifterConversion.Name = "lblPartialShifterConversion";
+            lblPartialShifterConversion.Size = new Size(259, 25);
+            lblPartialShifterConversion.TabIndex = 12;
+            lblPartialShifterConversion.Text = "1 second = 1000 milliseconds";
             // 
             // partialShifterPanel
             // 
@@ -294,10 +422,10 @@
             tabPageEditor.Controls.Add(btnEditorOpenFile);
             tabPageEditor.Controls.Add(lblEditorTitle);
             tabPageEditor.Controls.Add(rtbxEditor);
-            tabPageEditor.Location = new Point(4, 24);
+            tabPageEditor.Location = new Point(4, 30);
             tabPageEditor.Margin = new Padding(3, 4, 3, 4);
             tabPageEditor.Name = "tabPageEditor";
-            tabPageEditor.Size = new Size(754, 512);
+            tabPageEditor.Size = new Size(754, 506);
             tabPageEditor.TabIndex = 4;
             tabPageEditor.Text = "Editor";
             // 
@@ -436,10 +564,10 @@
             tabPageApiSettings.Controls.Add(lblApiSettingsApiKey);
             tabPageApiSettings.Controls.Add(pbxApiSettingsImage);
             tabPageApiSettings.Controls.Add(lblApiSettingsTitle);
-            tabPageApiSettings.Location = new Point(4, 24);
+            tabPageApiSettings.Location = new Point(4, 30);
             tabPageApiSettings.Margin = new Padding(3, 4, 3, 4);
             tabPageApiSettings.Name = "tabPageApiSettings";
-            tabPageApiSettings.Size = new Size(754, 512);
+            tabPageApiSettings.Size = new Size(754, 506);
             tabPageApiSettings.TabIndex = 5;
             tabPageApiSettings.Text = "API Settings";
             // 
@@ -519,10 +647,10 @@
             tabPageAbout.Controls.Add(lblAboutProgramTitle);
             tabPageAbout.Controls.Add(pbxAboutLogo);
             tabPageAbout.Controls.Add(lblAboutTitle);
-            tabPageAbout.Location = new Point(4, 24);
+            tabPageAbout.Location = new Point(4, 30);
             tabPageAbout.Margin = new Padding(3, 4, 3, 4);
             tabPageAbout.Name = "tabPageAbout";
-            tabPageAbout.Size = new Size(754, 512);
+            tabPageAbout.Size = new Size(754, 506);
             tabPageAbout.TabIndex = 6;
             tabPageAbout.Text = "About";
             // 
@@ -617,6 +745,9 @@
             Text = "SRT Workbench";
             Load += MainForm_Load;
             tabControl.ResumeLayout(false);
+            tabPageHome.ResumeLayout(false);
+            tabPageHome.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pbxHomeLogo).EndInit();
             tabPageShifter.ResumeLayout(false);
             tabPageShifter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownShifter).EndInit();
@@ -638,7 +769,7 @@
 
         private TabControl tabControl;
         private TabPage tabPageHome;
-        private TabPage tabPageTranslation;
+        private TabPage tabPageTranslator;
         private TabPage tabPageShifter;
         private TabPage tabPagePartialShifter;
         private TabPage tabPageEditor;
@@ -678,6 +809,15 @@
         private Button btnPartialShifterOpenFile;
         private Button btnPartialShifter;
         private FlowLayoutPanel partialShifterPanel;
-        private Label label1;
+        private Label lblPartialShifterConversion;
+        private Label lblHomeTitle;
+        private Label lblHomeTitle2;
+        private PictureBox pbxHomeLogo;
+        private Button btnHomeAbout;
+        private Button btnHomeApiSettings;
+        private Button btnHomeEditor;
+        private Button btnHomePartialShifter;
+        private Button btnHomeShifter;
+        private Button btnHomeTranslator;
     }
 }

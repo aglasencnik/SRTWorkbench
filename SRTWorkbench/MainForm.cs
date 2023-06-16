@@ -55,7 +55,7 @@ public partial class MainForm : Form
             {
 
             }
-            else if (currentPage == tabPageTranslation)
+            else if (currentPage == tabPageTranslator)
             {
                 var cm = new Credential { Target = _credentialTarget };
                 if (!cm.Load() || string.IsNullOrWhiteSpace(cm.Password))
@@ -128,6 +128,77 @@ public partial class MainForm : Form
     }
 
     #region Home
+    private void btnHomeTranslator_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            tabControl.SelectedTab = tabPageTranslator;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnHomeShifter_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            tabControl.SelectedTab = tabPageShifter;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnHomePartialShifter_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            tabControl.SelectedTab = tabPagePartialShifter;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnHomeEditor_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            tabControl.SelectedTab = tabPageEditor;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnHomeApiSettings_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            tabControl.SelectedTab = tabPageApiSettings;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void btnHomeAbout_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            tabControl.SelectedTab = tabPageAbout;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
     #endregion
 
     #region Translation
@@ -489,7 +560,7 @@ public partial class MainForm : Form
             if (!string.IsNullOrWhiteSpace(tbxApiSettingsApiKey.Text))
             {
                 tbxApiSettingsApiKey.Text = string.Empty;
-                tabControl.SelectedTab = tabPageTranslation;
+                tabControl.SelectedTab = tabPageTranslator;
             }
             else tabControl.SelectedTab = tabPageHome;
         }
