@@ -453,6 +453,7 @@
             // progressBarTranslator
             // 
             progressBarTranslator.Location = new Point(15, 450);
+            progressBarTranslator.Maximum = 1000;
             progressBarTranslator.Name = "progressBarTranslator";
             progressBarTranslator.Size = new Size(597, 40);
             progressBarTranslator.TabIndex = 0;
@@ -958,6 +959,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "SRT Workbench";
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             tabControl.ResumeLayout(false);
             tabPageHome.ResumeLayout(false);

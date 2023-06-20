@@ -6,9 +6,8 @@ using SRTWorkbench.UserControls;
 using System.Diagnostics;
 using System.Globalization;
 using DeepL.Model;
-using System.Linq;
-using System;
-using System.Windows.Forms;
+using System.ComponentModel;
+using System.Transactions;
 
 namespace SRTWorkbench;
 
@@ -22,6 +21,7 @@ public partial class MainForm : Form
     private int _editorCurrentOccurrenceIndex;
     private List<TargetLanguage> _targetLanguages;
     private int _anticipatedCheckedItemsCount;
+    private TranslationModel _translation;
 
     public MainForm()
     {
@@ -36,6 +36,7 @@ public partial class MainForm : Form
             _editorCurrentOccurrenceIndex = -1;
             _targetLanguages = new List<TargetLanguage>();
             _anticipatedCheckedItemsCount = 0;
+            _translation = new TranslationModel();
         }
         catch (Exception ex)
         {
@@ -48,6 +49,23 @@ public partial class MainForm : Form
         try
         {
 
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        try
+        {
+            if (translatorBackgroundWorker.IsBusy) translatorBackgroundWorker.CancelAsync();
+
+            while (translatorBackgroundWorker.IsBusy)
+            {
+                Application.DoEvents();
+            }
         }
         catch (Exception ex)
         {
@@ -81,59 +99,7 @@ public partial class MainForm : Form
                 else
                 {
                     _apiKey = cm.Password;
-                    tbxTranslatorSource.Enabled = false;
-                    tbxTranslatorTarget.Enabled = false;
-                    tbxTranslatorSource.Text = string.Empty;
-                    tbxTranslatorTarget.Text = string.Empty;
-                    _filePath = string.Empty;
-                    _newFilePath = string.Empty;
-                    cbxTranslatorSource.DataSource = null;
-                    checkedListBoxTranslatorTarget.Items.Clear();
-                    lblTranslatorUsage.Text = string.Empty;
-                    progressBarTranslator.Value = 0;
-                    btnTranslatorTranslate.Enabled = false;
-                    _targetLanguages = new List<TargetLanguage>();
-                    _anticipatedCheckedItemsCount = 0;
-
-                    var options = new TranslatorOptions
-                    {
-                        sendPlatformInfo = false,
-                        MaximumNetworkRetries = 5,
-                        PerRetryConnectionTimeout = TimeSpan.FromSeconds(10),
-                        appInfo = new AppInfo { AppName = "SRTWorkbench", AppVersion = "1.0.0" }
-                    };
-                    var translator = new Translator(_apiKey, options);
-                    var usage = await translator.GetUsageAsync();
-
-                    if (usage != null && usage.Character != null)
-                    {
-                        string usedCharacters = usage.Character.Count.ToString("N0", CultureInfo.CurrentCulture);
-                        string characterLimit = usage.Character.Limit.ToString("N0", CultureInfo.CurrentCulture);
-                        lblTranslatorUsage.Text = $"Usage: You have used {usedCharacters} characters out of your {characterLimit} character limit.";
-                    }
-                    else lblTranslatorUsage.Text = "Usage: Information currently not accessible or unavailable.";
-
-                    var sourceLanguages = await translator.GetSourceLanguagesAsync();
-                    var sourceLanguagesDict = new Dictionary<string, string>();
-
-                    foreach (var language in sourceLanguages)
-                    {
-                        sourceLanguagesDict.Add(language.Code, language.Name);
-                    }
-
-                    cbxTranslatorSource.DataSource = new BindingSource(sourceLanguagesDict, null);
-                    cbxTranslatorSource.DisplayMember = "Value";
-                    cbxTranslatorSource.ValueMember = "Key";
-                    cbxTranslatorSource.IntegralHeight = false;
-                    cbxTranslatorSource.SelectedIndex = -1;
-
-                    var targetLanguages = await translator.GetTargetLanguagesAsync();
-
-                    foreach (var language in targetLanguages)
-                    {
-                        _targetLanguages.Add(language);
-                        checkedListBoxTranslatorTarget.Items.Add(language.Name);
-                    }
+                    await InitializeTranslator();
                 }
             }
             else if (currentPage == tabPageShifter)
@@ -334,7 +300,8 @@ public partial class MainForm : Form
     {
         try
         {
-            if (!checkedListBoxTranslatorTarget.CheckedItems.Contains(cbxTranslatorSource.Text))
+            if (cbxTranslatorAutomaticallyDetect.Checked
+                || !checkedListBoxTranslatorTarget.CheckedItems.Contains(cbxTranslatorSource.Text))
             {
                 string srtContent = SubtitleFileHelper.ReadFile(Path.Combine(_filePath, tbxTranslatorSource.Text));
                 var sourceSubtitles = SubtitleParser.Deserialize(srtContent);
@@ -349,14 +316,7 @@ public partial class MainForm : Form
                 }
                 numberOfCharacters *= checkedListBoxTranslatorTarget.CheckedItems.Count;
 
-                var options = new TranslatorOptions
-                {
-                    sendPlatformInfo = false,
-                    MaximumNetworkRetries = 5,
-                    PerRetryConnectionTimeout = TimeSpan.FromSeconds(10),
-                    appInfo = new AppInfo { AppName = "SRTWorkbench", AppVersion = "1.0.0" }
-                };
-                var translator = new Translator(_apiKey, options);
+                var translator = new Translator(_apiKey, _translation.TranslatorOptions);
                 var usage = await translator.GetUsageAsync();
 
                 if (usage != null && usage.Character != null)
@@ -373,90 +333,56 @@ public partial class MainForm : Form
 
                         if (dialog == System.Windows.Forms.DialogResult.Yes)
                         {
-                            var translations = new List<TranslationModel>();
-
-                            for (int i = 0; i < checkedListBoxTranslatorTarget.CheckedItems.Count; i++)
+                            if (!translatorBackgroundWorker.IsBusy)
                             {
-                                string sourceLanguage = string.Empty;
+                                this.Cursor = Cursors.WaitCursor;
+
+                                foreach (Control c in this.Controls)
+                                {
+                                    c.Enabled = false;
+                                }
+                                progressBarTranslator.Enabled = true;
+
+                                _translation.SourcePath = Path.Combine(_filePath, tbxTranslatorSource.Text);
+                                _translation.TargetPath = Path.Combine(_newFilePath, tbxTranslatorTarget.Text);
+                                _translation.Subtitles = sourceSubtitles;
+                                _translation.ProgressBarMaxValue = progressBarTranslator.Maximum;
 
                                 if (!cbxTranslatorAutomaticallyDetect.Checked)
-                                    sourceLanguage = ((KeyValuePair<string, string>)cbxTranslatorSource.SelectedItem).Key;
+                                    _translation.SourceLanguage = ((KeyValuePair<string, string>)cbxTranslatorSource.SelectedItem).Key;
+                                else _translation.SourceLanguage = string.Empty;
 
-                                string targetLanguage = _targetLanguages
-                                    .FirstOrDefault(x => x.Name == checkedListBoxTranslatorTarget.CheckedItems[i].ToString())
-                                    ?.Code
-                                    ?? string.Empty;
-
-                                translations.Add(new TranslationModel
+                                for (int i = 0; i < checkedListBoxTranslatorTarget.CheckedItems.Count; i++)
                                 {
-                                    SourceLanguage = sourceLanguage,
-                                    TargetLanguage = targetLanguage,
-                                    Subtitles = sourceSubtitles
-                                });
-                            }
+                                    string targetLanguage = _targetLanguages
+                                        .FirstOrDefault(x => x.Name == checkedListBoxTranslatorTarget.CheckedItems[i].ToString())
+                                        ?.Code
+                                        ?? string.Empty;
 
-                            translations = SubtitleTranslator.TranslateSubtitles(translations);
-
-                            if (translations.Count > 1)
-                            {
-                                bool writingFailed = false;
-
-                                foreach (var translation in translations)
-                                {
-                                    string translatedSrtContent = SubtitleParser.Serialize(translation.Subtitles);
-                                    string path = Path.Combine(_newFilePath, tbxTranslatorTarget.Text);
-
-                                    int lastDotIndex = path.LastIndexOf('.');
-                                    if (lastDotIndex >= 0)
-                                    {
-                                        path = path.Insert(lastDotIndex, $"-{translation.TargetLanguage}");
-                                    }
-
-                                    if (!SubtitleFileHelper.WriteFile(path, translatedSrtContent)) writingFailed = true;
+                                    _translation.TargetLanguages.Add(targetLanguage);
                                 }
 
-                                if (!writingFailed) MessageBox.Show("Translation has been completed successfully!",
-                                        "Translation completed!",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                                else MessageBox.Show("There has been an error while writing to one or more translated subtitle files!",
-                                        "Translation failed on some files!",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning);
+                                translatorBackgroundWorker.RunWorkerAsync();
                             }
-                            else if (translations.Count == 0)
-                            {
-                                string translatedSrtContent = SubtitleParser.Serialize(translations[0].Subtitles);
-
-                                if (SubtitleFileHelper.WriteFile(Path.Combine(_newFilePath, tbxTranslatorTarget.Text), translatedSrtContent))
-                                {
-                                    MessageBox.Show("Translation has been completed successfully!",
-                                        "Translation completed!",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                                }
-                                else MessageBox.Show("There has been an error while writing to the new file!",
-                                        "Translation failed!",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning);
-                            }
-
-
+                            else MessageBox.Show("Translation could NOT be started!",
+                                    "Translation couldn't be started!",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                         }
                         else MessageBox.Show("Translation has been canceled!",
-                            "Translation canceled!",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+                                "Translation canceled!",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
                     }
                     else MessageBox.Show("You don't have enough characters left!",
-                        "Not enough characters left!",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                            "Not enough characters left!",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
                 }
                 else MessageBox.Show("Usage information currently not accessible or unavailable.",
-                    "Usage unknown!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                        "Usage unknown!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
             }
             else MessageBox.Show("You can't select the same target language as your source language!",
                     "You can't select one of the languages!",
@@ -473,11 +399,99 @@ public partial class MainForm : Form
     {
         try
         {
+            var task = Task.Run(async () =>
+            {
+                BackgroundWorker worker = sender as BackgroundWorker;
+                var translator = new Translator(_apiKey, _translation.TranslatorOptions);
+                bool isSuccess = true;
+                int totalNumberOfLines = 0;
+                int numOfTotalTranslatedLines = 0;
+                foreach (var subtitle in _translation.Subtitles)
+                {
+                    totalNumberOfLines += subtitle.Lines.Count;
+                }
+                totalNumberOfLines *= _translation.TargetLanguages.Count;
 
+                foreach (var targetLanguage in _translation.TargetLanguages)
+                {
+                    var translatedSubtitles = new List<SubtitleModel>();
+                    var sourceLines = _translation.Subtitles.SelectMany(s => s.Lines).ToList();
+                    var translatedLines = new List<string>();
+                    int usedLines = 0;
+                    int numOfTranslatedLines = 0;
+                    int translationStep = 100;
+
+                    for (int i = 0; i < (int)Math.Ceiling((double)sourceLines.Count / translationStep); i++)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        var lines = sourceLines.Skip(numOfTranslatedLines).Take(translationStep).ToArray();
+
+                        if (!string.IsNullOrWhiteSpace(_translation.SourceLanguage))
+                        {
+                            var translations = await translator.TranslateTextAsync(lines, _translation.SourceLanguage, targetLanguage);
+
+                            if (translations != null)
+                            {
+                                translatedLines.AddRange(translations.Select(translation => translation.Text));
+                            }
+                        }
+                        else
+                        {
+                            var translations = await translator.TranslateTextAsync(lines, null, targetLanguage);
+
+                            if (translations != null)
+                            {
+                                translatedLines.AddRange(translations.Select(translation => translation.Text));
+                            }
+                        }
+
+                        numOfTranslatedLines += lines.Length;
+                        numOfTotalTranslatedLines += lines.Length;
+                        int progressPercentage = (int)Math.Round((double)numOfTotalTranslatedLines / totalNumberOfLines * _translation.ProgressBarMaxValue);
+                        translatorBackgroundWorker.ReportProgress(progressPercentage);
+                    }
+
+                    foreach (var subtitle in _translation.Subtitles)
+                    {
+                        subtitle.Lines = translatedLines.Skip(usedLines).Take(subtitle.Lines.Count).ToList();
+                        translatedSubtitles.Add(subtitle);
+                        usedLines += subtitle.Lines.Count;
+                    }
+
+                    if (_translation.TargetLanguages.Count > 1)
+                    {
+                        string path = _translation.TargetPath;
+                        string translatedSrtContent = SubtitleParser.Serialize(translatedSubtitles);
+
+                        int lastDotIndex = path.LastIndexOf('.');
+                        if (lastDotIndex >= 0)
+                        {
+                            path = path.Insert(lastDotIndex, $"-{targetLanguage}");
+                        }
+
+                        if (!SubtitleFileHelper.WriteFile(path, translatedSrtContent)) isSuccess = false;
+                    }
+                    else
+                    {
+                        string translatedSrtContent = SubtitleParser.Serialize(translatedSubtitles);
+
+                        if (!SubtitleFileHelper.WriteFile(_translation.TargetPath, translatedSrtContent)) isSuccess = false;
+                    }
+                }
+
+                e.Result = isSuccess;
+            });
+            task.Wait();
         }
         catch (Exception ex)
         {
             _ = new ErrorHandler(ex);
+            e.Cancel = true;
         }
     }
 
@@ -485,7 +499,7 @@ public partial class MainForm : Form
     {
         try
         {
-
+            progressBarTranslator.Value = e.ProgressPercentage;
         }
         catch (Exception ex)
         {
@@ -493,11 +507,43 @@ public partial class MainForm : Form
         }
     }
 
-    private void translatorBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    private async void translatorBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
     {
         try
         {
+            foreach (Control c in this.Controls)
+            {
+                c.Enabled = true;
+            }
 
+            await InitializeTranslator();
+
+            this.Cursor = Cursors.Default;
+
+            if (e.Cancelled)
+            {
+                MessageBox.Show("Translation was cancelled!",
+                            "Translation cancelled",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+            }
+            else if (e.Error != null || e.Result == null)
+            {
+                _ = new ErrorHandler(e.Error ?? throw new Exception("No argument was passed!"));
+            }
+            else
+            {
+                bool result = (bool)e.Result;
+
+                if (result) MessageBox.Show("Translation has been completed successfully!",
+                                "Translation completed!",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                else MessageBox.Show("There has been an error while writing to one or more translated subtitle files!",
+                            "Translation failed on some files!",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+            }
         }
         catch (Exception ex)
         {
@@ -583,6 +629,73 @@ public partial class MainForm : Form
                 btnTranslatorTranslate.Enabled = true;
             }
             else btnTranslatorTranslate.Enabled = false;
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private async Task InitializeTranslator()
+    {
+        try
+        {
+
+            tbxTranslatorSource.Enabled = false;
+            tbxTranslatorTarget.Enabled = false;
+            tbxTranslatorSource.Text = string.Empty;
+            tbxTranslatorTarget.Text = string.Empty;
+            _filePath = string.Empty;
+            _newFilePath = string.Empty;
+            cbxTranslatorSource.DataSource = null;
+            checkedListBoxTranslatorTarget.Items.Clear();
+            lblTranslatorUsage.Text = string.Empty;
+            progressBarTranslator.Value = 0;
+            btnTranslatorTranslate.Enabled = false;
+            _targetLanguages = new List<TargetLanguage>();
+            _anticipatedCheckedItemsCount = 0;
+            _translation = new TranslationModel();
+
+            var options = new TranslatorOptions
+            {
+                sendPlatformInfo = false,
+                MaximumNetworkRetries = 5,
+                PerRetryConnectionTimeout = TimeSpan.FromSeconds(10),
+                appInfo = new AppInfo { AppName = "SRTWorkbench", AppVersion = "1.0.0" }
+            };
+            _translation.TranslatorOptions = options;
+            var translator = new Translator(_apiKey, options);
+            var usage = await translator.GetUsageAsync();
+
+            if (usage != null && usage.Character != null)
+            {
+                string usedCharacters = usage.Character.Count.ToString("N0", CultureInfo.CurrentCulture);
+                string characterLimit = usage.Character.Limit.ToString("N0", CultureInfo.CurrentCulture);
+                lblTranslatorUsage.Text = $"Usage: You have used {usedCharacters} characters out of your {characterLimit} character limit.";
+            }
+            else lblTranslatorUsage.Text = "Usage: Information currently not accessible or unavailable.";
+
+            var sourceLanguages = await translator.GetSourceLanguagesAsync();
+            var sourceLanguagesDict = new Dictionary<string, string>();
+
+            foreach (var language in sourceLanguages)
+            {
+                sourceLanguagesDict.Add(language.Code, language.Name);
+            }
+
+            cbxTranslatorSource.DataSource = new BindingSource(sourceLanguagesDict, null);
+            cbxTranslatorSource.DisplayMember = "Value";
+            cbxTranslatorSource.ValueMember = "Key";
+            cbxTranslatorSource.IntegralHeight = false;
+            cbxTranslatorSource.SelectedIndex = -1;
+
+            var targetLanguages = await translator.GetTargetLanguagesAsync();
+
+            foreach (var language in targetLanguages)
+            {
+                _targetLanguages.Add(language);
+                checkedListBoxTranslatorTarget.Items.Add(language.Name);
+            }
         }
         catch (Exception ex)
         {
