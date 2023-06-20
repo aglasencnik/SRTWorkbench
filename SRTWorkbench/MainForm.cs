@@ -21,6 +21,7 @@ public partial class MainForm : Form
     private List<int> _editorFoundIndexes;
     private int _editorCurrentOccurrenceIndex;
     private List<TargetLanguage> _targetLanguages;
+    private int _anticipatedCheckedItemsCount;
 
     public MainForm()
     {
@@ -34,6 +35,7 @@ public partial class MainForm : Form
             _editorFoundIndexes = new List<int>();
             _editorCurrentOccurrenceIndex = -1;
             _targetLanguages = new List<TargetLanguage>();
+            _anticipatedCheckedItemsCount = 0;
         }
         catch (Exception ex)
         {
@@ -91,6 +93,7 @@ public partial class MainForm : Form
                     progressBarTranslator.Value = 0;
                     btnTranslatorTranslate.Enabled = false;
                     _targetLanguages = new List<TargetLanguage>();
+                    _anticipatedCheckedItemsCount = 0;
 
                     var options = new TranslatorOptions
                     {
@@ -265,7 +268,7 @@ public partial class MainForm : Form
     }
     #endregion
 
-    #region Translation
+    #region Translator
     private void btnTranslatorSource_Click(object sender, EventArgs e)
     {
         try
@@ -363,9 +366,9 @@ public partial class MainForm : Form
                     if (charactersLeft >= numberOfCharacters)
                     {
                         string usedCharacters = numberOfCharacters.ToString("N0", CultureInfo.CurrentCulture);
-                        var dialog = MessageBox.Show($"Do you really want to start translation?\nYou would use up approximately: {usedCharacters} characters.", 
-                            "Confirm translation", 
-                            MessageBoxButtons.YesNo, 
+                        var dialog = MessageBox.Show($"Do you really want to start translation?\nYou would use up approximately: {usedCharacters} characters.",
+                            "Confirm translation",
+                            MessageBoxButtons.YesNo,
                             MessageBoxIcon.Question);
 
                         if (dialog == System.Windows.Forms.DialogResult.Yes)
@@ -450,15 +453,51 @@ public partial class MainForm : Form
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                 }
-                else MessageBox.Show("Usage information currently not accessible or unavailable.", 
-                    "Usage unknown!", 
-                    MessageBoxButtons.OK, 
+                else MessageBox.Show("Usage information currently not accessible or unavailable.",
+                    "Usage unknown!",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
             else MessageBox.Show("You can't select the same target language as your source language!",
                     "You can't select one of the languages!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void translatorBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void translatorBackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+    {
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void translatorBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+        try
+        {
+
         }
         catch (Exception ex)
         {
@@ -482,6 +521,21 @@ public partial class MainForm : Form
     {
         try
         {
+            CheckIfTranslationAvailable();
+        }
+        catch (Exception ex)
+        {
+            _ = new ErrorHandler(ex);
+        }
+    }
+
+    private void checkedListBoxTranslatorTarget_ItemCheck(object sender, ItemCheckEventArgs e)
+    {
+        try
+        {
+            if (e.NewValue == CheckState.Checked) _anticipatedCheckedItemsCount++;
+            else _anticipatedCheckedItemsCount--;
+
             CheckIfTranslationAvailable();
         }
         catch (Exception ex)
@@ -517,25 +571,13 @@ public partial class MainForm : Form
         }
     }
 
-    private void checkedListBoxTranslatorTarget_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        try
-        {
-            CheckIfTranslationAvailable();
-        }
-        catch (Exception ex)
-        {
-            _ = new ErrorHandler(ex);
-        }
-    }
-
     private void CheckIfTranslationAvailable()
     {
         try
         {
             if (!string.IsNullOrWhiteSpace(tbxTranslatorSource.Text)
                 && !string.IsNullOrWhiteSpace(tbxTranslatorTarget.Text)
-                && checkedListBoxTranslatorTarget.CheckedItems.Count > 0
+                && _anticipatedCheckedItemsCount > 0
                 && (cbxTranslatorAutomaticallyDetect.Checked == true || cbxTranslatorSource.SelectedIndex != -1))
             {
                 btnTranslatorTranslate.Enabled = true;

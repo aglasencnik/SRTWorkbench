@@ -97,6 +97,7 @@
             lblAboutProgramTitle = new Label();
             pbxAboutLogo = new PictureBox();
             lblAboutTitle = new Label();
+            translatorBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             tabControl.SuspendLayout();
             tabPageHome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbxHomeLogo).BeginInit();
@@ -337,7 +338,7 @@
             checkedListBoxTranslatorTarget.ScrollAlwaysVisible = true;
             checkedListBoxTranslatorTarget.Size = new Size(544, 148);
             checkedListBoxTranslatorTarget.TabIndex = 14;
-            checkedListBoxTranslatorTarget.SelectedIndexChanged += checkedListBoxTranslatorTarget_SelectedIndexChanged;
+            checkedListBoxTranslatorTarget.ItemCheck += checkedListBoxTranslatorTarget_ItemCheck;
             // 
             // lblTranslatorTargetLanguage
             // 
@@ -934,6 +935,14 @@
             lblAboutTitle.TabIndex = 0;
             lblAboutTitle.Text = "About this app";
             // 
+            // translatorBackgroundWorker
+            // 
+            translatorBackgroundWorker.WorkerReportsProgress = true;
+            translatorBackgroundWorker.WorkerSupportsCancellation = true;
+            translatorBackgroundWorker.DoWork += translatorBackgroundWorker_DoWork;
+            translatorBackgroundWorker.ProgressChanged += translatorBackgroundWorker_ProgressChanged;
+            translatorBackgroundWorker.RunWorkerCompleted += translatorBackgroundWorker_RunWorkerCompleted;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
@@ -1043,5 +1052,6 @@
         private Button btnTranslatorTranslate;
         private Label lblTranslatorUsage;
         private CheckBox cbxTranslatorAutomaticallyDetect;
+        private System.ComponentModel.BackgroundWorker translatorBackgroundWorker;
     }
 }
