@@ -316,7 +316,7 @@ public partial class MainForm : Form
                 }
                 numberOfCharacters *= checkedListBoxTranslatorTarget.CheckedItems.Count;
 
-                var translator = new Translator(_apiKey, _translation.TranslatorOptions);
+                var translator = new Translator(_apiKey);
                 var usage = await translator.GetUsageAsync();
 
                 if (usage != null && usage.Character != null)
@@ -402,7 +402,7 @@ public partial class MainForm : Form
             var task = Task.Run(async () =>
             {
                 BackgroundWorker worker = sender as BackgroundWorker;
-                var translator = new Translator(_apiKey, _translation.TranslatorOptions);
+                var translator = new Translator(_apiKey);
                 bool isSuccess = true;
                 int totalNumberOfLines = 0;
                 int numOfTotalTranslatedLines = 0;
@@ -656,15 +656,7 @@ public partial class MainForm : Form
             _anticipatedCheckedItemsCount = 0;
             _translation = new TranslationModel();
 
-            var options = new TranslatorOptions
-            {
-                sendPlatformInfo = false,
-                MaximumNetworkRetries = 5,
-                PerRetryConnectionTimeout = TimeSpan.FromSeconds(10),
-                appInfo = new AppInfo { AppName = "SRTWorkbench", AppVersion = "1.0.0" }
-            };
-            _translation.TranslatorOptions = options;
-            var translator = new Translator(_apiKey, options);
+            var translator = new Translator(_apiKey);
             var usage = await translator.GetUsageAsync();
 
             if (usage != null && usage.Character != null)
